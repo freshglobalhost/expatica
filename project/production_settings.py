@@ -19,8 +19,6 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
-
-
 # Frontend on Vercel — allow your production domain(s)
 CORS_ALLOWED_ORIGINS = [
     origin.strip()

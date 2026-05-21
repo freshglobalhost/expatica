@@ -1,0 +1,6 @@
+-r requirements.txt
+autopep8
+Faker
+isort
+pylint
+black

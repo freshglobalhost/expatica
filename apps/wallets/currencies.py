@@ -1,0 +1,36 @@
+"""ISO 4217 fiat currency codes supported for wallet balances."""
+
+CURRENCY_CHOICES = [
+    ("USD", "US Dollar"),
+    ("EUR", "Euro"),
+    ("GBP", "British Pound"),
+    ("NGN", "Nigerian Naira"),
+    ("GHS", "Ghanaian Cedi"),
+    ("KES", "Kenyan Shilling"),
+    ("ZAR", "South African Rand"),
+    ("CAD", "Canadian Dollar"),
+    ("AUD", "Australian Dollar"),
+    ("CHF", "Swiss Franc"),
+    ("JPY", "Japanese Yen"),
+    ("CNY", "Chinese Yuan"),
+    ("INR", "Indian Rupee"),
+    ("AED", "UAE Dirham"),
+    ("SAR", "Saudi Riyal"),
+    ("SGD", "Singapore Dollar"),
+    ("HKD", "Hong Kong Dollar"),
+    ("BRL", "Brazilian Real"),
+    ("MXN", "Mexican Peso"),
+    ("TRY", "Turkish Lira"),
+    ("PLN", "Polish Zloty"),
+    ("SEK", "Swedish Krona"),
+    ("NOK", "Norwegian Krone"),
+    ("DKK", "Danish Krone"),
+    ("NZD", "New Zealand Dollar"),
+    ("PHP", "Philippine Peso"),
+    ("THB", "Thai Baht"),
+    ("IDR", "Indonesian Rupiah"),
+    ("MYR", "Malaysian Ringgit"),
+    ("EGP", "Egyptian Pound"),
+]
+
+CURRENCY_CODES = {code for code, _ in CURRENCY_CHOICES}

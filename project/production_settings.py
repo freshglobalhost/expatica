@@ -11,7 +11,11 @@ DATABASES["default"] = dj_database_url.parse(get_env_variable("DATABASE_URL"), c
 
 ALLOWED_HOSTS = ["api.pennycreditonline.com", "pennycreditonline.com","www.pennycreditonline.com"]
 
-CORS_ALLOW_CREDENTIALS = True
+
+REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = [
+    "rest_framework.permissions.AllowAny",
+]
+
 
 CORS_ALLOW_HEADERS = (
     "accept",
@@ -32,7 +36,6 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
-CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://pennycreditonline.com",

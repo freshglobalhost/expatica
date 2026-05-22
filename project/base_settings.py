@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from project.settings.packages.rest_framework_settings import *
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SITE_NAME = "PennyCredit"
@@ -8,14 +8,6 @@ SECRET_KEY = "change-me-in-production"
 DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-
-
-CORS_ALLOWED_ORIGINS = [
-    "https://pennycreditonline.com",
-    "https://www.pennycreditonline.com",
-     "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -106,4 +98,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-from project.settings.packages.rest_framework_settings import *
+

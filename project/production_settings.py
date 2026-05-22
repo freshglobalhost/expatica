@@ -1,8 +1,8 @@
 import os
 import dj_database_url
-from project.base_settings import *  # noqa: F403
-from project.settings.packages.celery_settings import *  # noqa: F403
-from project.settings.local.email_settings import *  # noqa: F403
+from project.base_settings import *
+from project.settings.packages.celery_settings import *
+from project.settings.local.email_settings import *
 SECRET_KEY = get_env_variable("SECRET_KEY")
 DEBUG = int(get_env_variable("DEBUG", "0"))
 INSTALLED_APPS.append("storages")
@@ -34,7 +34,6 @@ CORS_ALLOW_METHODS = (
     "POST",
     "PUT",
 )
-
 
 
 CORS_ALLOWED_ORIGINS = [

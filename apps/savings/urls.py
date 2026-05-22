@@ -1,4 +1,4 @@
-from rest_framework.routers import DefaultRouter
+from apps.core.routers import APIRouter
 
 from .views import (
     AutoSaveRuleViewSet,
@@ -9,7 +9,7 @@ from .views import (
 
 app_name = "savings"
 
-router = DefaultRouter()
+router = APIRouter()
 router.register("goals", SavingsGoalViewSet, basename="savings-goal")
 router.register("locked", LockedSavingsAccountViewSet, basename="locked-savings")
 router.register("auto-save", AutoSaveRuleViewSet, basename="auto-save-rule")

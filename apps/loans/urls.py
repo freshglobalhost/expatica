@@ -1,4 +1,4 @@
-from rest_framework.routers import DefaultRouter
+from apps.core.routers import APIRouter
 
 from .views import (
     LoanApplicationViewSet,
@@ -9,7 +9,7 @@ from .views import (
 
 app_name = "loans"
 
-router = DefaultRouter()
+router = APIRouter()
 router.register("products", LoanProductViewSet, basename="loan-product")
 router.register("applications", LoanApplicationViewSet, basename="loan-application")
 router.register("repayments", LoanRepaymentViewSet, basename="loan-repayment")

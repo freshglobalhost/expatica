@@ -101,11 +101,10 @@ MEDIA_URL = "/uploads/"
 MEDIA_ROOT = get_env_variable(
     "MEDIA_ROOT", BASE_DIR / "project/uploads")
 
-
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dl9r87apa',
-    'API_KEY': '582245214259671',
-    'API_SECRET': 'x1VIGv7Lsi4LEQ60oEwXBJbQnYg'
+    'CLOUD_NAME': 'dnpr2r2ua',
+    'API_KEY': '522129713914897',
+    'API_SECRET': 'mhqNUBtQbRIKPD32GtokaD5lihk'
 }
 
 STORAGES = {

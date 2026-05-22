@@ -73,9 +73,12 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
+        data = request.data.copy()
+        if data.get("profile_picture") in ("", None) and "profile_picture" not in request.FILES:
+            data.pop("profile_picture", None)
         serializer = UserProfileUpdateSerializer(
             instance,
-            data=request.data,
+            data=data,
             partial=partial,
             context={"request": request},
         )

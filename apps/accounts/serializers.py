@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from PIL import UnidentifiedImageError
 from rest_framework import serializers
 
 from apps.wallets.models import Wallet
 
 from .models import Gender
+from .utils import process_profile_picture
 
 User = get_user_model()
 
@@ -98,6 +100,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = User
         fields = [
@@ -117,6 +121,31 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         if value not in valid:
             raise serializers.ValidationError("Invalid gender value.")
         return value
+
+    def validate_profile_picture(self, value):
+        if value in (None, "", False):
+            return None
+        max_bytes = 5 * 1024 * 1024
+        if getattr(value, "size", 0) > max_bytes:
+            raise serializers.ValidationError("Profile picture must be 5 MB or smaller.")
+        allowed_types = {
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif",
+            "image/jpg",
+        }
+        content_type = (getattr(value, "content_type", None) or "").lower()
+        if content_type and content_type not in allowed_types:
+            raise serializers.ValidationError(
+                "Unsupported image type. Use JPEG, PNG, WebP, or GIF."
+            )
+        try:
+            return process_profile_picture(value)
+        except UnidentifiedImageError as exc:
+            raise serializers.ValidationError("Invalid image file.") from exc
+        except Exception as exc:
+            raise serializers.ValidationError(f"Could not process image: {exc}") from exc
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

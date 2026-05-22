@@ -1,10 +1,10 @@
-from rest_framework.routers import DefaultRouter
+from apps.core.routers import APIRouter
 
 from .views import TransferMethodViewSet, TransferViewSet
 
 app_name = "banking"
 
-router = DefaultRouter()
+router = APIRouter()
 router.register("methods", TransferMethodViewSet, basename="transfer-method")
 router.register("transfers", TransferViewSet, basename="transfer")
 

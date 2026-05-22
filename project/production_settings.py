@@ -3,7 +3,6 @@ import dj_database_url
 from project.base_settings import *  # noqa: F403
 from project.settings.packages.celery_settings import *  # noqa: F403
 from project.settings.local.email_settings import *  # noqa: F403
-from project.utils.settings import get_env_variable
 SECRET_KEY = get_env_variable("SECRET_KEY")
 DEBUG = int(get_env_variable("DEBUG", "0"))
 INSTALLED_APPS.append("storages")

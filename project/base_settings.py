@@ -1,5 +1,6 @@
 from pathlib import Path
 from project.settings.packages.rest_framework_settings import *
+from project.utils.settings import get_env_variable
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SITE_NAME = "PennyCredit"

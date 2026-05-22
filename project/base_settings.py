@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "apps.investments",
     "apps.savings",
     "apps.support",
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [

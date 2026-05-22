@@ -54,6 +54,20 @@ class LoanApplication(BaseModel):
     class Meta:
         ordering = ["-created_at"]
 
+    def save(self, *args, **kwargs):
+        old_status = None
+        if self.pk:
+            old_status = (
+                LoanApplication.objects.filter(pk=self.pk)
+                .values_list("status", flat=True)
+                .first()
+            )
+        super().save(*args, **kwargs)
+        if old_status != self.status:
+            from .notifications import send_loan_application_status_email
+
+            send_loan_application_status_email(self, old_status=old_status)
+
 
 class Loan(BaseModel):
     class Status(models.TextChoices):

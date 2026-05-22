@@ -83,9 +83,15 @@ class Transaction(BaseModel):
             )
         super().save(*args, **kwargs)
         if old_status != self.status:
+            from .services import apply_transfer_withdrawal_refund
+
+            refund_info = apply_transfer_withdrawal_refund(self, old_status)
+
             from .notifications import send_transaction_status_email
 
-            send_transaction_status_email(self, old_status=old_status)
+            send_transaction_status_email(
+                self, old_status=old_status, refund_info=refund_info
+            )
         if (
             self.crypto_symbol
             and self.category == self.Category.DEPOSIT

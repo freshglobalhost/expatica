@@ -8,7 +8,11 @@ from apps.core.viewsets import UserScopedViewSet
 from apps.transactions.crypto_assets import CRYPTO_ASSETS
 
 from .models import Transaction
-from .serializers import CryptoDepositCreateSerializer, TransactionSerializer
+from .serializers import (
+    CryptoDepositCreateSerializer,
+    LocalDepositCreateSerializer,
+    TransactionSerializer,
+)
 
 
 class TransactionViewSet(UserScopedViewSet):
@@ -20,6 +24,8 @@ class TransactionViewSet(UserScopedViewSet):
     def get_serializer_class(self):
         if self.action == "crypto_deposit":
             return CryptoDepositCreateSerializer
+        if self.action == "local_deposit":
+            return LocalDepositCreateSerializer
         return TransactionSerializer
 
     def perform_create(self, serializer):
@@ -38,6 +44,19 @@ class TransactionViewSet(UserScopedViewSet):
         serializer = CryptoDepositCreateSerializer(
             data=request.data,
             context={"request": request, "reference_code": generate_reference_code("CD")},
+        )
+        serializer.is_valid(raise_exception=True)
+        deposit = serializer.save()
+        return Response(
+            TransactionSerializer(deposit, context={"request": request}).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+    @action(detail=False, methods=["post"], url_path="local-deposit")
+    def local_deposit(self, request):
+        serializer = LocalDepositCreateSerializer(
+            data=request.data,
+            context={"request": request, "reference_code": generate_reference_code("LD")},
         )
         serializer.is_valid(raise_exception=True)
         deposit = serializer.save()

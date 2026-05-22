@@ -9,6 +9,16 @@ from .models import Gender
 User = get_user_model()
 
 
+class AssignedBankAccountSerializer(serializers.Serializer):
+    account_holder = serializers.CharField()
+    bank_name = serializers.CharField()
+    account_number = serializers.CharField()
+    routing_or_swift = serializers.CharField(allow_blank=True)
+    country = serializers.CharField(allow_blank=True)
+    currency = serializers.CharField()
+    instructions = serializers.CharField(allow_blank=True)
+
+
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(read_only=True)
     initials = serializers.CharField(read_only=True)
@@ -19,6 +29,8 @@ class UserSerializer(serializers.ModelSerializer):
     is_kyc_verified = serializers.BooleanField(read_only=True)
     is_profile_complete = serializers.BooleanField(read_only=True)
     profile_picture_url = serializers.SerializerMethodField()
+    enable_transfer = serializers.BooleanField(read_only=True)
+    assigned_bank_account = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -43,6 +55,8 @@ class UserSerializer(serializers.ModelSerializer):
             "has_transaction_pin",
             "is_kyc_verified",
             "is_profile_complete",
+            "enable_transfer",
+            "assigned_bank_account",
             "date_joined",
         ]
         read_only_fields = [
@@ -59,11 +73,28 @@ class UserSerializer(serializers.ModelSerializer):
             "has_transaction_pin",
             "is_kyc_verified",
             "is_profile_complete",
+            "enable_transfer",
+            "assigned_bank_account",
             "profile_picture_url",
         ]
 
     def get_profile_picture_url(self, obj):
         return obj.get_profile_picture_url(self.context.get("request"))
+
+    def get_assigned_bank_account(self, obj):
+        if not obj.enable_transfer:
+            return None
+        if not obj.bank_account_number or not obj.bank_name:
+            return None
+        return {
+            "account_holder": obj.bank_account_holder or obj.full_name,
+            "bank_name": obj.bank_name,
+            "account_number": obj.bank_account_number,
+            "routing_or_swift": obj.bank_routing_or_swift or "",
+            "country": obj.bank_country or obj.country or "",
+            "currency": obj.bank_currency or "USD",
+            "instructions": obj.bank_deposit_instructions or "",
+        }
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):

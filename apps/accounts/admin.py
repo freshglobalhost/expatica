@@ -7,8 +7,16 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
-    list_display = ("email", "first_name", "last_name", "country", "kyc_status", "is_active")
-    list_filter = ("kyc_status", "is_staff", "is_active", "country")
+    list_display = (
+        "email",
+        "first_name",
+        "last_name",
+        "country",
+        "enable_transfer",
+        "kyc_status",
+        "is_active",
+    )
+    list_filter = ("kyc_status", "enable_transfer", "is_staff", "is_active", "country")
     search_fields = ("email", "first_name", "last_name", "phone")
     ordering = ("-date_joined",)
     filter_horizontal = ()
@@ -29,6 +37,21 @@ class UserAdmin(DjangoUserAdmin):
                     "profile_picture",
                     "kyc_status",
                     "transaction_pin",
+                ),
+            },
+        ),
+        (
+            "Local bank deposit",
+            {
+                "fields": (
+                    "enable_transfer",
+                    "bank_account_holder",
+                    "bank_name",
+                    "bank_account_number",
+                    "bank_routing_or_swift",
+                    "bank_country",
+                    "bank_currency",
+                    "bank_deposit_instructions",
                 ),
             },
         ),

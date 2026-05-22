@@ -26,6 +26,8 @@ class Transaction(BaseModel):
         COMPLETED = "completed", "Completed"
         FAILED = "failed", "Failed"
         CANCELLED = "cancelled", "Cancelled"
+        REFUNDED = "refunded", "Refunded"
+        REJECTED = "rejected", "Rejected"
 
     class CryptoSymbol(models.TextChoices):
         BTC = "BTC", "Bitcoin"
@@ -80,6 +82,10 @@ class Transaction(BaseModel):
                 .first()
             )
         super().save(*args, **kwargs)
+        if old_status != self.status:
+            from .notifications import send_transaction_status_email
+
+            send_transaction_status_email(self, old_status=old_status)
         if (
             self.crypto_symbol
             and self.category == self.Category.DEPOSIT

@@ -39,6 +39,21 @@ class User(AbstractUser):
         ],
         default="pending",
     )
+    enable_transfer = models.BooleanField(
+        default=False,
+        help_text="When enabled, the user can submit local bank deposit requests using assigned bank details.",
+    )
+    bank_account_holder = models.CharField(max_length=128, blank=True)
+    bank_name = models.CharField(max_length=128, blank=True)
+    bank_account_number = models.CharField(max_length=64, blank=True)
+    bank_routing_or_swift = models.CharField(
+        max_length=64,
+        blank=True,
+        help_text="Routing number, sort code, SWIFT/BIC, or IBAN as applicable.",
+    )
+    bank_country = models.CharField(max_length=64, blank=True)
+    bank_currency = models.CharField(max_length=3, blank=True, default="USD")
+    bank_deposit_instructions = models.TextField(blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]

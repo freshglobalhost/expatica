@@ -14,4 +14,4 @@ def get_env_variable(var_name, default=None):
 
 
 def get_app_settings():
-    return os.getenv("DJANGO_SETTINGS_MODULE", "project.production_settings")
+    return os.getenv("DJANGO_SETTINGS_MODULE", "project.development_settings")

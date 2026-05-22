@@ -11,32 +11,31 @@ DATABASES["default"] = dj_database_url.parse(get_env_variable("DATABASE_URL"), c
 
 ALLOWED_HOSTS = ["api.pennycreditonline.com", "pennycreditonline.com","www.pennycreditonline.com"]
 
-CORS_ALLOWED_ORIGINS = [
-    "https://pennycreditonline.com",
-    "https://api.pennycreditonline.com",
-    "https://www.pennycreditonline.com"
-]
-
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = [
+CORS_ALLOW_HEADERS = (
     "accept",
-    "accept-encoding",
     "authorization",
     "content-type",
-    "dnt",
-    "origin",
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-]
-
-CORS_ALLOW_METHODS = [
-    "DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT",
-]
+)
 
 
-CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+CORS_ALLOW_ALL_ORIGINS:True
+
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 

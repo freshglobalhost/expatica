@@ -32,7 +32,14 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
-CORS_ALLOW_ALL_ORIGINS:True
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "https://pennycreditonline.com",
+    "https://www.pennycreditonline.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

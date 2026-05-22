@@ -37,6 +37,7 @@ CORS_ALLOW_METHODS = (
 )
 
 
+
 CORS_ALLOWED_ORIGINS = [
     "https://pennycreditonline.com",
     "https://www.pennycreditonline.com",
@@ -48,18 +49,3 @@ CORS_ALLOWED_ORIGINS = [
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dl9r87apa',
-    'API_KEY': '582245214259671',
-    'API_SECRET': 'x1VIGv7Lsi4LEQ60oEwXBJbQnYg'
-}
-
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}

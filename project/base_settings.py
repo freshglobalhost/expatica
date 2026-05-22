@@ -88,11 +88,33 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "/assets/"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+STATICFILES_DIRS = [
+    BASE_DIR / "project/assets",
+]
+STATIC_ROOT = BASE_DIR / "assets"
+
+MEDIA_URL = "/uploads/"
+
+MEDIA_ROOT = get_env_variable(
+    "MEDIA_ROOT", BASE_DIR / "project/uploads")
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dl9r87apa',
+    'API_KEY': '582245214259671',
+    'API_SECRET': 'x1VIGv7Lsi4LEQ60oEwXBJbQnYg'
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

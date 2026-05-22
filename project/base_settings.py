@@ -77,12 +77,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "pennycredit.db",
-    }
-}
+
+
+DATABASES = {}  # configure your DB in production
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

@@ -26,7 +26,7 @@ def approve_and_disburse_loans(modeladmin, request, queryset):
             continue
         application.status = LoanApplication.Status.APPROVED
         application.save(update_fields=["status", "updated_at"])
-        loan = create_loan_from_approved_application(application)
+        loan, _ = create_loan_from_approved_application(application)
         if loan:
             created += 1
     if created:
@@ -60,19 +60,25 @@ class LoanApplicationAdmin(admin.ModelAdmin):
         became_approved = obj.status == LoanApplication.Status.APPROVED and (
             not change or previous_status != LoanApplication.Status.APPROVED
         )
-        if became_approved:
-            loan = create_loan_from_approved_application(obj)
-            if loan:
-                messages.success(
-                    request,
-                    f"Loan {loan.reference_code} created with {obj.term_months} scheduled repayments.",
-                )
+        if became_approved and hasattr(obj, "loan") and obj.loan_id:
+            messages.success(
+                request,
+                f"Loan {obj.loan.reference_code} created and disbursed to the user's wallet.",
+            )
 
 
 @admin.register(Loan)
 class LoanAdmin(admin.ModelAdmin):
     list_display = ("reference_code", "user", "product", "principal_amount", "status", "outstanding_balance")
     list_filter = ("status",)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if obj.status == Loan.Status.APPROVED and obj.disbursed_on:
+            messages.success(
+                request,
+                f"Loan {obj.reference_code} approved; funds disbursed to wallet.",
+            )
 
 
 @admin.register(LoanRepayment)

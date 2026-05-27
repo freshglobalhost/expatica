@@ -12,11 +12,12 @@ class UserAdmin(DjangoUserAdmin):
         "first_name",
         "last_name",
         "country",
+        "currency_code",
         "enable_transfer",
         "kyc_status",
         "is_active",
     )
-    list_filter = ("kyc_status", "enable_transfer", "is_staff", "is_active", "country")
+    list_filter = ("kyc_status", "currency_code", "enable_transfer", "is_staff", "is_active", "country")
     search_fields = ("email", "first_name", "last_name", "phone")
     ordering = ("-date_joined",)
     filter_horizontal = ()
@@ -32,6 +33,7 @@ class UserAdmin(DjangoUserAdmin):
                 "fields": (
                     "phone",
                     "country",
+                    "currency_code",
                     "address",
                     "gender",
                     "profile_picture",

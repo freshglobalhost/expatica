@@ -65,8 +65,17 @@ class LoanApplication(BaseModel):
         super().save(*args, **kwargs)
         if old_status != self.status:
             from .notifications import send_loan_application_status_email
+            from .services import create_loan_from_approved_application
 
-            send_loan_application_status_email(self, old_status=old_status)
+            disbursement_info = None
+            if self.status == self.Status.APPROVED:
+                _, disbursement_info = create_loan_from_approved_application(self)
+
+            send_loan_application_status_email(
+                self,
+                old_status=old_status,
+                disbursement_info=disbursement_info,
+            )
 
 
 class Loan(BaseModel):
@@ -101,6 +110,27 @@ class Loan(BaseModel):
 
     class Meta:
         ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        old_status = None
+        if self.pk:
+            old_status = (
+                Loan.objects.filter(pk=self.pk).values_list("status", flat=True).first()
+            )
+        super().save(*args, **kwargs)
+        if old_status != self.status:
+            from .notifications import send_loan_status_email
+            from .services import disburse_loan_principal
+
+            disbursement_info = None
+            if self.status == self.Status.APPROVED:
+                disbursement_info = disburse_loan_principal(self)
+
+            send_loan_status_email(
+                self,
+                old_status=old_status,
+                disbursement_info=disbursement_info,
+            )
 
 
 class LoanRepayment(BaseModel):

@@ -3,9 +3,14 @@ from decimal import Decimal
 from rest_framework import serializers
 
 from apps.transactions.models import Transaction
-from apps.wallets.models import Wallet
+from apps.wallets.services import get_or_create_primary_wallet
 
 from .models import Transfer, TransferMethod
+from .transfer_validation import (
+    INVALID_ROUTING_MESSAGE,
+    INVALID_SWIFT_MESSAGE,
+    is_valid_transfer_code,
+)
 
 
 class TransferMethodSerializer(serializers.ModelSerializer):
@@ -73,12 +78,23 @@ class TransferCreateSerializer(serializers.ModelSerializer):
         if not user.check_transaction_pin(pin):
             raise serializers.ValidationError({"transaction_pin": "Invalid transaction PIN."})
 
-        wallet = (
-            Wallet.objects.filter(user=user, currency_code="USD").first()
-            or Wallet.objects.filter(user=user).order_by("currency_code").first()
-        )
-        if not wallet:
-            raise serializers.ValidationError({"amount": "No wallet found for your account."})
+        method = attrs.get("method")
+        details = attrs.get("recipient_details") or {}
+        if method:
+            if method.slug == "local":
+                routing = details.get("routing_number", "")
+                if not is_valid_transfer_code(routing):
+                    raise serializers.ValidationError(
+                        {"recipient_details": INVALID_ROUTING_MESSAGE}
+                    )
+            elif method.slug == "wire":
+                swift = details.get("swift_bic", "")
+                if not is_valid_transfer_code(swift):
+                    raise serializers.ValidationError(
+                        {"recipient_details": INVALID_SWIFT_MESSAGE}
+                    )
+
+        wallet = get_or_create_primary_wallet(user)
         if wallet.balance < attrs["amount"]:
             raise serializers.ValidationError({"amount": "Insufficient wallet balance."})
 

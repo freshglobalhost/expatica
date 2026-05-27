@@ -19,6 +19,7 @@ from apps.loans.serializers import LoanSerializer
 from apps.transactions.models import Transaction
 from apps.transactions.serializers import TransactionSerializer
 from apps.wallets.models import Wallet
+from apps.wallets.services import get_or_create_primary_wallet, get_user_currency
 from apps.wallets.serializers import WalletSerializer
 
 from .dashboard_utils import build_dashboard_notifications
@@ -93,9 +94,10 @@ class DashboardSummaryView(APIView):
 
     def get(self, request):
         user = request.user
+        primary = get_or_create_primary_wallet(user)
         wallets = Wallet.objects.filter(user=user)
-        primary = wallets.filter(currency_code="USD").first() or wallets.first()
         total_balance = wallets.aggregate(total=Sum("balance"))["total"] or Decimal("0")
+        account_currency = get_user_currency(user)
 
         loan_balance = (
             Loan.objects.filter(user=user, status=Loan.Status.ACTIVE).aggregate(
@@ -136,7 +138,7 @@ class DashboardSummaryView(APIView):
                 "total_balance": str(total_balance),
                 "deposit_balance": str(deposit_balance),
                 "loan_balance": str(loan_balance),
-                "currency_code": primary.currency_code if primary else "USD",
+                "currency_code": account_currency,
                 "btc_balance": str(primary.btc_balance if primary else 0),
                 "eth_balance": str(primary.eth_balance if primary else 0),
                 "usdt_balance": str(primary.usdt_balance if primary else 0),

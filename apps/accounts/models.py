@@ -7,6 +7,8 @@ from django.db import models
 from django.utils import timezone
 from django_resized import ResizedImageField
 
+from apps.wallets.currencies import CURRENCY_CHOICES
+
 
 class Gender(models.TextChoices):
     MALE = "male", "Male"
@@ -19,6 +21,12 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=32, blank=True)
     country = models.CharField(max_length=64, blank=True)
+    currency_code = models.CharField(
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default="USD",
+        help_text="Account display currency for balances and transfers.",
+    )
     address = models.TextField(null=True, blank=True)
     gender = models.CharField(max_length=20, choices=Gender.choices, null=True, blank=True)
     profile_picture = ResizedImageField(
@@ -52,7 +60,12 @@ class User(AbstractUser):
         help_text="Routing number, sort code, SWIFT/BIC, or IBAN as applicable.",
     )
     bank_country = models.CharField(max_length=64, blank=True)
-    bank_currency = models.CharField(max_length=3, blank=True, default="USD")
+    bank_currency = models.CharField(
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default="USD",
+        blank=True,
+    )
     bank_deposit_instructions = models.TextField(blank=True)
 
     USERNAME_FIELD = "email"

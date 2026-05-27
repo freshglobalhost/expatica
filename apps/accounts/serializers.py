@@ -48,6 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
             "account_reference",
             "phone",
             "country",
+            "currency_code",
             "address",
             "gender",
             "gender_label",
@@ -77,6 +78,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_profile_complete",
             "enable_transfer",
             "assigned_bank_account",
+            "currency_code",
             "profile_picture_url",
         ]
 
@@ -94,7 +96,7 @@ class UserSerializer(serializers.ModelSerializer):
             "account_number": obj.bank_account_number,
             "routing_or_swift": obj.bank_routing_or_swift or "",
             "country": obj.bank_country or obj.country or "",
-            "currency": obj.bank_currency or "USD",
+            "currency": obj.bank_currency or obj.currency_code or "USD",
             "instructions": obj.bank_deposit_instructions or "",
         }
 
@@ -109,6 +111,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
             "last_name",
             "phone",
             "country",
+            "currency_code",
             "address",
             "gender",
             "profile_picture",
@@ -161,6 +164,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "last_name",
             "phone",
             "country",
+            "currency_code",
             "address",
             "gender",
             "transaction_pin",
@@ -182,7 +186,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.set_transaction_pin(pin)
         user.save()
-        Wallet.objects.create(user=user, currency_code="USD", balance=0)
+        currency = user.currency_code or "USD"
+        Wallet.objects.create(user=user, currency_code=currency, balance=0)
         from apps.savings.defaults import ensure_default_savings_for_user
 
         ensure_default_savings_for_user(user)

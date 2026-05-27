@@ -31,6 +31,8 @@ CURRENCY_CHOICES = [
     ("IDR", "Indonesian Rupiah"),
     ("MYR", "Malaysian Ringgit"),
     ("EGP", "Egyptian Pound"),
+    ("TTD", "Trinidad and Tobago Dollar"),
+    ("KYD", "Cayman Islands Dollar"),
 ]
 
 CURRENCY_CODES = {code for code, _ in CURRENCY_CHOICES}

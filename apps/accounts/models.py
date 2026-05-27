@@ -78,7 +78,18 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.email
+        old_currency = None
+        if self.pk:
+            old_currency = (
+                type(self).objects.filter(pk=self.pk)
+                .values_list("currency_code", flat=True)
+                .first()
+            )
         super().save(*args, **kwargs)
+        if self.pk and old_currency and old_currency != self.currency_code:
+            from apps.wallets.services import sync_user_wallet_currency
+
+            sync_user_wallet_currency(self)
 
     @property
     def initials(self) -> str:

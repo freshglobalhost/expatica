@@ -74,3 +74,7 @@ class UserAdmin(DjangoUserAdmin):
             if len(pin) == 4 and pin.isdigit() and not is_password_usable(pin):
                 obj.transaction_pin = make_password(pin)
         super().save_model(request, obj, form, change)
+        if change and "currency_code" in form.changed_data:
+            from apps.wallets.services import sync_user_wallet_currency
+
+            sync_user_wallet_currency(obj)

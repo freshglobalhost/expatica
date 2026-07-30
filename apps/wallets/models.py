@@ -21,6 +21,8 @@ class Wallet(BaseModel):
     eth_balance = models.DecimalField(max_digits=18, decimal_places=8, default=0)
     usdt_balance = models.DecimalField(max_digits=18, decimal_places=8, default=0)
     sol_balance = models.DecimalField(max_digits=18, decimal_places=8, default=0)
+    bnb_balance = models.DecimalField(max_digits=18, decimal_places=8, default=0)
+    ltc_balance = models.DecimalField(max_digits=18, decimal_places=8, default=0)
 
     class Meta:
         unique_together = [("user", "currency_code")]
@@ -35,6 +37,8 @@ class Wallet(BaseModel):
             "ETH": "eth_balance",
             "USDT": "usdt_balance",
             "SOL": "sol_balance",
+            "BNB": "bnb_balance",
+            "LTC": "ltc_balance",
         }
         field = field_map.get(symbol.upper())
         if not field:

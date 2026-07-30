@@ -16,6 +16,8 @@ class WalletSerializer(serializers.ModelSerializer):
             "eth_balance",
             "usdt_balance",
             "sol_balance",
+            "bnb_balance",
+            "ltc_balance",
             "created_at",
             "updated_at",
         ]
@@ -26,6 +28,8 @@ class WalletSerializer(serializers.ModelSerializer):
             "eth_balance",
             "usdt_balance",
             "sol_balance",
+            "bnb_balance",
+            "ltc_balance",
             "created_at",
             "updated_at",
         ]

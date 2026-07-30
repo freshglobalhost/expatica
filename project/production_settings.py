@@ -8,7 +8,7 @@ DEBUG = int(get_env_variable("DEBUG", "0"))
 INSTALLED_APPS.append("storages")
 DATABASES["default"] = dj_database_url.parse(get_env_variable("DATABASE_URL"), conn_max_age=600)
 
-ALLOWED_HOSTS = ["api.pennycreditonline.com", "pennycreditonline.com","www.pennycreditonline.com"]
+ALLOWED_HOSTS = ["api.expaticaonline.com", "expaticaonline.com", "www.expaticaonline.com"]
 
 
 REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = [
@@ -37,8 +37,8 @@ CORS_ALLOW_METHODS = (
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://pennycreditonline.com",
-    "https://www.pennycreditonline.com",
+    "https://expaticaonline.com",
+    "https://www.expaticaonline.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]

@@ -12,5 +12,8 @@ class WalletAdmin(admin.ModelAdmin):
         "btc_balance",
         "eth_balance",
         "usdt_balance",
+        "sol_balance",
+        "bnb_balance",
+        "ltc_balance",
     )
     list_filter = ("currency_code",)

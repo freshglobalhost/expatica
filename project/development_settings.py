@@ -13,8 +13,8 @@ DATABASES = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://pennycreditonline.com",
-    "https://www.pennycreditonline.com",
+    "https://expaticaonline.com",
+    "https://www.expaticaonline.com",
      "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]

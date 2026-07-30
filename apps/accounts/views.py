@@ -143,6 +143,8 @@ class DashboardSummaryView(APIView):
                 "eth_balance": str(primary.eth_balance if primary else 0),
                 "usdt_balance": str(primary.usdt_balance if primary else 0),
                 "sol_balance": str(primary.sol_balance if primary else 0),
+                "bnb_balance": str(primary.bnb_balance if primary else 0),
+                "ltc_balance": str(primary.ltc_balance if primary else 0),
                 "recent_transactions": TransactionSerializer(
                     recent_qs, many=True, context=ctx
                 ).data,
@@ -195,13 +197,13 @@ class ForgotPasswordView(APIView):
         if user_exists:
             reset = PasswordResetCode.create_for_email(email)
             message = (
-                f"Your PennyCredit password reset code is {reset.code}. "
+                f"Your Expatica password reset code is {reset.code}. "
                 "It expires in 15 minutes."
             )
             send_mail(
-                subject="PennyCredit password reset",
+                subject="Expatica password reset",
                 message=message,
-                from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@pennycredit.com"),
+                from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@expaticaonline.com"),
                 recipient_list=[email],
                 fail_silently=False,
             )

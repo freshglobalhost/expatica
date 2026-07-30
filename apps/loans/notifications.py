@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 SUPPORT_EMAIL = getattr(
     settings,
     "SUPPORT_EMAIL",
-    getattr(settings, "DEFAULT_FROM_EMAIL", "support@pennycreditonline.com"),
+    getattr(settings, "DEFAULT_FROM_EMAIL", "support@expaticaonline.com"),
 )
 
 APPLICATION_NOTIFY_STATUSES = frozenset(
@@ -47,7 +47,7 @@ LOAN_STATUS_SUBJECTS = {
 
 APPLICATION_STATUS_INTROS = {
     LoanApplication.Status.PENDING: (
-        "Thank you for applying with PennyCredit. We have received your loan application "
+        "Thank you for applying with Expatica. We have received your loan application "
         "and it is now pending review. No funds have been debited from your wallet. "
         "You will receive another email when a decision has been made."
     ),
@@ -183,12 +183,12 @@ def _build_application_email_body(
             "",
             "WHAT YOU SHOULD DO",
             "────────────────────────────────────────",
-            "1. Sign in to your PennyCredit dashboard to view your loan and wallet balance.",
+            "1. Sign in to your Expatica dashboard to view your loan and wallet balance.",
             "2. Review your repayment schedule and upcoming due dates.",
             "3. Contact support if you need any assistance.",
             "4. Keep this email for your records.",
             "",
-            "— PennyCredit",
+            "— Expatica",
             "This is an automated notification. Please do not reply to this email.",
         ]
     )
@@ -250,11 +250,11 @@ def _build_loan_email_body(
             "",
             "WHAT YOU SHOULD DO",
             "────────────────────────────────────────",
-            "1. Sign in to your PennyCredit dashboard to review your loan details.",
+            "1. Sign in to your Expatica dashboard to review your loan details.",
             "2. Keep this email for your records.",
             "3. Contact support if you need any assistance.",
             "",
-            "— PennyCredit",
+            "— Expatica",
             "This is an automated notification. Please do not reply to this email.",
         ]
     )
@@ -279,7 +279,7 @@ def send_loan_application_status_email(
     status_prefix = APPLICATION_STATUS_SUBJECTS.get(
         application.status, "Loan application update"
     )
-    subject = f"PennyCredit — {status_prefix} ({application.reference_code})"
+    subject = f"Expatica — {status_prefix} ({application.reference_code})"
     message = _build_application_email_body(
         application, old_status=old_status, disbursement_info=disbursement_info
     )
@@ -288,7 +288,7 @@ def send_loan_application_status_email(
         send_mail(
             subject=subject,
             message=message,
-            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@pennycreditonline.com"),
+            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@expaticaonline.com"),
             recipient_list=[user.email],
             fail_silently=False,
         )
@@ -316,7 +316,7 @@ def send_loan_status_email(
         return
 
     status_prefix = LOAN_STATUS_SUBJECTS.get(loan.status, "Loan update")
-    subject = f"PennyCredit — {status_prefix} ({loan.reference_code})"
+    subject = f"Expatica — {status_prefix} ({loan.reference_code})"
     message = _build_loan_email_body(
         loan, old_status=old_status, disbursement_info=disbursement_info
     )
@@ -325,7 +325,7 @@ def send_loan_status_email(
         send_mail(
             subject=subject,
             message=message,
-            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@pennycreditonline.com"),
+            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@expaticaonline.com"),
             recipient_list=[user.email],
             fail_silently=False,
         )

@@ -17,13 +17,13 @@ FAQS = [
     (
         "getting-started",
         1,
-        "What is PennyCredit and who is it for?",
-        "PennyCredit is a digital banking platform that combines everyday money management with lending, savings, investments, virtual cards, and crypto deposits in one secure dashboard. It is designed for individuals and small businesses who want transparent fees, fast loan decisions, and modern tools without visiting a branch. After you sign up and complete identity verification, you can fund your wallet, apply for credit, open savings goals, and invest from the same account.",
+        "What is Expatica and who is it for?",
+        "Expatica is a digital banking platform that combines everyday money management with lending, savings, investments, virtual cards, and crypto deposits in one secure dashboard. It is designed for individuals and small businesses who want transparent fees, fast loan decisions, and modern tools without visiting a branch. After you sign up and complete identity verification, you can fund your wallet, apply for credit, open savings goals, and invest from the same account.",
     ),
     (
         "accounts-wallets",
         2,
-        "How do I add money to my PennyCredit wallet?",
+        "How do I add money to my Expatica wallet?",
         "You can fund your USD wallet through bank transfer methods shown under Send & Receive, or by submitting a crypto deposit (BTC, ETH, USDT, or SOL) with the required amount and proof of payment. Crypto deposits are credited after our team verifies the transaction on-chain. Your dashboard balance updates automatically once a deposit is approved. Always double-check the wallet address and network before sending digital assets.",
     ),
     (
@@ -35,7 +35,7 @@ FAQS = [
     (
         "loans-credit",
         4,
-        "What interest rates apply to PennyCredit loans?",
+        "What interest rates apply to Expatica loans?",
         "Rates depend on the loan product (personal, business, home, or auto), the amount requested, term length, and your profile. Each product displays a minimum APR on the marketplace before you apply. Your final rate is confirmed at approval and shown on the loan details page together with principal, outstanding balance, and the full repayment schedule. Use the in-app loan calculator to estimate monthly payments before applying.",
     ),
     (
@@ -47,20 +47,20 @@ FAQS = [
     (
         "savings-investments",
         6,
-        "How do PennyCredit investment plans work?",
+        "How do Expatica investment plans work?",
         "Each plan lists a minimum and maximum investment, expected return (percentage or fixed dollar amount), duration, and whether your original capital is returned at maturity. When you invest, funds are deducted from your wallet balance using your transaction PIN and locked until the maturity date. Active positions show invested amount, expected return, and days remaining. Returns are credited automatically when the plan matures, according to the plan terms shown before you confirm.",
     ),
     (
         "cards-payments",
         7,
-        "How do virtual cards work on PennyCredit?",
+        "How do virtual cards work on Expatica?",
         "You can request a virtual Visa or Mastercard from the Cards section. Each card receives a unique card number, CVV, and cardholder name based on your profile. Fund the card from your wallet, set spending limits, freeze or unfreeze instantly, and withdraw unused balance back to your wallet. Full card details require your transaction PIN via the secure reveal action. A one-time issuance fee applies when the card is created.",
     ),
     (
         "cards-payments",
         8,
         "What transfer methods are supported for sending money?",
-        "PennyCredit supports wire transfer, local bank transfer, PayPal, Skrill, Google Pay, Western Union, Wise, and Payoneer. Each method has its own fields and limits shown in the send-money flow. Transfers require your four-digit transaction PIN and sufficient wallet balance. Pending transfers appear in your recent activity until processed. Fees, where applicable, are displayed before you confirm.",
+        "Expatica supports wire transfer, local bank transfer, PayPal, Skrill, Google Pay, Western Union, Wise, and Payoneer. Each method has its own fields and limits shown in the send-money flow. Transfers require your four-digit transaction PIN and sufficient wallet balance. Pending transfers appear in your recent activity until processed. Fees, where applicable, are displayed before you confirm.",
     ),
     (
         "security-compliance",
@@ -81,9 +81,9 @@ ARTICLES = [
     (
         "getting-started",
         "create-and-verify-account",
-        "How to create and verify your PennyCredit account",
+        "How to create and verify your Expatica account",
         """## Overview
-Creating a PennyCredit account takes only a few minutes. Verification unlocks transfers, loans, cards, and higher limits.
+Creating a Expatica account takes only a few minutes. Verification unlocks transfers, loans, cards, and higher limits.
 
 ## Step 1: Sign up
 Visit the registration page and provide your legal name, email, phone number, and a strong password. You must accept the terms of service and privacy policy. Choose a username that you will use alongside your email at login.
@@ -121,7 +121,7 @@ Every credit and debit includes a **reference code**, category, status, and time
 
 ## Tips
 - Keep a small buffer for card issuance fees and transfer fees.
-- Use your transaction PIN only on the official PennyCredit site or app.
+- Use your transaction PIN only on the official Expatica site or app.
 - Report unrecognized transactions immediately via a support ticket.""",
     ),
     (
@@ -142,13 +142,13 @@ Deposits are credited after on-chain confirmation and manual review. You will se
 
 ## Important warnings
 - Sending on the wrong network may result in permanent loss of funds.
-- PennyCredit will never ask you to send crypto to an address given over phone or chat.
+- Expatica will never ask you to send crypto to an address given over phone or chat.
 - SOL and other assets must match the deposit page symbol exactly.""",
     ),
     (
         "loans-credit",
         "how-to-apply-for-a-loan",
-        "How to apply for a loan on PennyCredit",
+        "How to apply for a loan on Expatica",
         """## Choose a product
 Visit **Loans** to compare Personal, Business, Home, and Auto products. Each card shows minimum and maximum amounts, starting APR, and available terms.
 
@@ -165,7 +165,7 @@ The multi-step form collects amount, term, purpose, contact details, and uploads
 Your application receives a unique reference code and **pending** status. You cannot edit a submitted application—contact support if you made an error.
 
 ## Approval and disbursement
-When an administrator sets status to **approved**, PennyCredit automatically:
+When an administrator sets status to **approved**, Expatica automatically:
 1. Creates a **Loan** record with your rate and term
 2. Generates the **repayment schedule**
 3. Credits your wallet with the principal amount
@@ -215,7 +215,7 @@ Set realistic targets, prioritize an emergency fund, and review progress monthly
         "investment-plans-explained",
         "Investment plans: returns, duration, and risk",
         """## Plan types
-PennyCredit offers multiple plans ranging from short **7-day** starter products to **12-month** high-yield options. Each plan specifies:
+Expatica offers multiple plans ranging from short **7-day** starter products to **12-month** high-yield options. Each plan specifies:
 - Minimum and maximum investment
 - Return type (**percent** of principal or **fixed** dollar return)
 - Duration label (lock period)
@@ -255,9 +255,9 @@ Set a monthly spending cap when creating or editing the card. Track **spent this
     (
         "cards-payments",
         "send-money-and-transfers",
-        "Sending money with PennyCredit transfer methods",
+        "Sending money with Expatica transfer methods",
         """## Supported rails
-PennyCredit integrates eight transfer methods: Wire, Local, PayPal, Skrill, Google Pay, Western Union, Wise, and Payoneer. Availability may depend on your region and verification level.
+Expatica integrates eight transfer methods: Wire, Local, PayPal, Skrill, Google Pay, Western Union, Wise, and Payoneer. Availability may depend on your region and verification level.
 
 ## How to send
 1. Open **Send money** from the dashboard or **View all** methods.
@@ -274,12 +274,12 @@ Exceeding your available balance blocks the transfer. Never send money to recipi
     (
         "security-compliance",
         "security-best-practices",
-        "Security best practices for your PennyCredit account",
+        "Security best practices for your Expatica account",
         """## Password and PIN
 Use a unique, strong password for login and a **different** four-digit PIN for transactions. Do not store PINs in email or screenshots.
 
 ## Phishing awareness
-PennyCredit staff will never ask for your password, full card number, or PIN on social media. Always log in via the official website URL in your browser.
+Expatica staff will never ask for your password, full card number, or PIN on social media. Always log in via the official website URL in your browser.
 
 ## Device hygiene
 Keep your phone and computer updated. Avoid public Wi‑Fi when approving transfers. Log out on shared devices.

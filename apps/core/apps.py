@@ -10,7 +10,7 @@ class CoreConfig(AppConfig):
         from django.conf import settings
         from django.contrib import admin
 
-        site_name = getattr(settings, "SITE_NAME", "PennyCredit")
+        site_name = getattr(settings, "SITE_NAME", "Expatica")
         admin.site.site_header = f"{site_name} Administration"
         admin.site.site_title = site_name
         admin.site.index_title = "Dashboard"

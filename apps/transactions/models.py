@@ -34,6 +34,8 @@ class Transaction(BaseModel):
         ETH = "ETH", "Ethereum"
         USDT = "USDT", "Tether"
         SOL = "SOL", "Solana"
+        BNB = "BNB", "BNB"
+        LTC = "LTC", "Litecoin"
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

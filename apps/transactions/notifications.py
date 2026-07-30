@@ -11,7 +11,7 @@ from .models import Transaction
 SUPPORT_EMAIL = getattr(
     settings,
     "SUPPORT_EMAIL",
-    getattr(settings, "DEFAULT_FROM_EMAIL", "support@pennycreditonline.com"),
+    getattr(settings, "DEFAULT_FROM_EMAIL", "support@expaticaonline.com"),
 )
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ STATUS_SUBJECTS = {
 
 STATUS_INTROS = {
     Transaction.Status.PENDING: (
-        "Thank you for using PennyCredit. We have received your transaction and it is "
+        "Thank you for using Expatica. We have received your transaction and it is "
         "currently pending review. The details are confirmed below. You will receive "
         "another email when the status changes."
     ),
@@ -141,6 +141,8 @@ def _crypto_wallet_line(transaction: Transaction, wallet) -> str | None:
         "ETH": "eth_balance",
         "USDT": "usdt_balance",
         "SOL": "sol_balance",
+        "BNB": "bnb_balance",
+        "LTC": "ltc_balance",
     }
     field = field_map.get((transaction.crypto_symbol or "").upper())
     if not field or not wallet:
@@ -248,7 +250,7 @@ def _build_next_steps(transaction: Transaction) -> list[str]:
             "────────────────────────────────────────",
             "1. Our team will review your transaction.",
             "2. You will receive another email when the status is updated.",
-            "3. Sign in to your PennyCredit dashboard to track progress at any time.",
+            "3. Sign in to your Expatica dashboard to track progress at any time.",
             "4. Contact support if you need assistance or did not initiate this transaction.",
         ]
     if transaction.status in REFUND_NOTIFY_STATUSES:
@@ -257,7 +259,7 @@ def _build_next_steps(transaction: Transaction) -> list[str]:
             "WHAT YOU SHOULD DO",
             "────────────────────────────────────────",
             "1. Review the transaction summary and wallet section above.",
-            "2. Sign in to your PennyCredit dashboard to confirm your current balance.",
+            "2. Sign in to your Expatica dashboard to confirm your current balance.",
             "3. Contact support if you need assistance or did not initiate this transaction.",
             "4. Keep this email for your records.",
         ]
@@ -265,7 +267,7 @@ def _build_next_steps(transaction: Transaction) -> list[str]:
         "",
         "NEXT STEPS",
         "────────────────────────────────────────",
-        "1. Sign in to your PennyCredit dashboard to view your transaction history and balances.",
+        "1. Sign in to your Expatica dashboard to view your transaction history and balances.",
         "2. Keep this email for your records.",
         "3. Contact support if you need assistance or did not authorize this transaction.",
     ]
@@ -295,7 +297,7 @@ def _build_email_body(
     body_lines.extend(
         [
             "",
-            "— PennyCredit",
+            "— Expatica",
             "This is an automated notification. Please do not reply to this email.",
         ]
     )
@@ -320,7 +322,7 @@ def send_transaction_status_email(
     category_label = transaction.get_category_display()
     status_prefix = STATUS_SUBJECTS.get(transaction.status, "Transaction update")
     subject = (
-        f"PennyCredit — {status_prefix}: {category_label} "
+        f"Expatica — {status_prefix}: {category_label} "
         f"({transaction.reference_code})"
     )
     message = _build_email_body(
@@ -331,7 +333,7 @@ def send_transaction_status_email(
         send_mail(
             subject=subject,
             message=message,
-            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@pennycreditonline.com"),
+            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@expaticaonline.com"),
             recipient_list=[user.email],
             fail_silently=False,
         )

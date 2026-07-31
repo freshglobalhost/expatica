@@ -7,14 +7,11 @@ SECRET_KEY = get_env_variable("SECRET_KEY")
 DEBUG = int(get_env_variable("DEBUG", "0"))
 INSTALLED_APPS.append("storages")
 DATABASES["default"] = dj_database_url.parse(get_env_variable("DATABASE_URL"), conn_max_age=600)
-
-ALLOWED_HOSTS = ["api.expaticaonline.com", "expaticaonline.com", "www.expaticaonline.com"]
-
+ALLOWED_HOSTS = ["api.expaticaonline.com", "expaticaonline.com", "www.expaticaonline.com","expaticaonline.vercel.app"]
 
 REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = [
     "rest_framework.permissions.AllowAny",
 ]
-
 
 CORS_ALLOW_HEADERS = (
     "accept",
@@ -39,6 +36,7 @@ CORS_ALLOW_METHODS = (
 CORS_ALLOWED_ORIGINS = [
     "https://expaticaonline.com",
     "https://www.expaticaonline.com",
+    "expaticaonline.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]

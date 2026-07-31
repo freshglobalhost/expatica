@@ -7,7 +7,7 @@ SECRET_KEY = get_env_variable("SECRET_KEY")
 DEBUG = int(get_env_variable("DEBUG", "0"))
 INSTALLED_APPS.append("storages")
 DATABASES["default"] = dj_database_url.parse(get_env_variable("DATABASE_URL"), conn_max_age=600)
-ALLOWED_HOSTS = ["api.expaticaonline.com", "expaticaonline.com", "www.expaticaonline.com","expaticaonline.vercel.app"]
+ALLOWED_HOSTS = ["api.expaticaonline.com", "expaticaonline.com", "www.expaticaonline.com","expaticaonline.vercel.app","expaticaonline-b851a5f25fef.herokuapp.com"]
 
 REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = [
     "rest_framework.permissions.AllowAny",

@@ -36,7 +36,6 @@ CORS_ALLOW_METHODS = (
 CORS_ALLOWED_ORIGINS = [
     "https://expaticaonline.com",
     "https://www.expaticaonline.com",
-    "expaticaonline.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]

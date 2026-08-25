@@ -95,7 +95,9 @@ def apply_transfer_withdrawal_refund(
         return None
     if old_status not in (Transaction.Status.PENDING, Transaction.Status.COMPLETED):
         return None
-    if transaction.amount <= Decimal("0"):
+
+    is_crypto = bool(transaction.crypto_symbol and transaction.crypto_amount)
+    if not is_crypto and transaction.amount <= Decimal("0"):
         return None
 
     wallet = get_user_wallet(transaction.user, transaction.currency_code)
@@ -104,6 +106,20 @@ def apply_transfer_withdrawal_refund(
 
     with db_transaction.atomic():
         wallet = Wallet.objects.select_for_update().get(pk=wallet.pk)
+        if is_crypto:
+            field = wallet.crypto_balance_field(transaction.crypto_symbol)
+            if not field:
+                return None
+            current = getattr(wallet, field)
+            setattr(wallet, field, current + transaction.crypto_amount)
+            wallet.save(update_fields=[field, "updated_at"])
+            return {
+                "action": "refunded_to_crypto_wallet",
+                "amount": transaction.crypto_amount,
+                "currency_code": transaction.crypto_symbol,
+                "is_crypto": True,
+            }
+
         wallet.balance += transaction.amount
         wallet.save(update_fields=["balance", "updated_at"])
 

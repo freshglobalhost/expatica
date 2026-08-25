@@ -54,3 +54,8 @@ CRYPTO_ASSETS = [
 ]
 
 CRYPTO_SYMBOLS = {asset["symbol"] for asset in CRYPTO_ASSETS}
+
+
+def get_crypto_asset(symbol: str) -> dict | None:
+    key = (symbol or "").upper()
+    return next((asset for asset in CRYPTO_ASSETS if asset["symbol"] == key), None)

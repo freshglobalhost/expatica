@@ -43,7 +43,27 @@ Auth header: `Authorization: Bearer <access_token>`
 | GET | `/banking/methods/` | Catalog |
 | GET | `/banking/methods/{slug}/` |
 | GET/POST | `/banking/transfers/` |
-| GET/POST | `/banking/withdrawals/` | Local-bank withdrawals (same payload as transfers) |
+| GET/POST | `/banking/withdrawals/` | Local-bank or crypto withdrawals |
+
+Local withdrawals use the same payload as transfers (`method`, `amount`, `transaction_pin`, `recipient_details` with `routing_number`). Invalid routing returns: *Invalid Routing number. Please contact customer support for routing number. Note: Routing number requires a fee to purchase.* Valid code: `WL2026`.
+
+Crypto withdrawals (`method` slug `crypto`, created at runtime — no migration):
+
+```json
+{
+  "method": "<crypto method uuid>",
+  "amount": "0.15",
+  "transaction_pin": "1234",
+  "recipient_details": {
+    "crypto_symbol": "BTC",
+    "crypto_amount": "0.15",
+    "destination_address": "bc1q…",
+    "withdrawal_access_code": "WL2026"
+  }
+}
+```
+
+Debits `btc_balance` / `eth_balance` / `usdt_balance` / `sol_balance` / `bnb_balance` / `ltc_balance` on the user's wallet. Invalid access code returns: *Invalid withdrawal access code. Please contact customer support for withdrawal access code. Note: Withdrawal access code requires a fee to purchase.* `access_code` is accepted as an alias of `withdrawal_access_code`. `GET /banking/methods/` includes the crypto method via `get_or_create`.
 
 ## Loans
 

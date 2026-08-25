@@ -93,10 +93,15 @@ def _status_change_line(old_status: str | None, new_status: str) -> str:
 def _pending_wallet_lines(transaction: Transaction) -> list[str]:
     if transaction.status != Transaction.Status.PENDING:
         return []
-    amount = _format_money(transaction.amount, transaction.currency_code)
     if transaction.category in DEBIT_CATEGORIES:
+        if transaction.crypto_symbol and transaction.crypto_amount:
+            amount = f"{transaction.crypto_amount:,.8f} {transaction.crypto_symbol}"
+            wallet_label = f"{transaction.crypto_symbol} wallet"
+        else:
+            amount = _format_money(transaction.amount, transaction.currency_code)
+            wallet_label = "wallet"
         return [
-            f"Amount reserved: −{amount} has been debited from your wallet pending processing.",
+            f"Amount reserved: −{amount} has been debited from your {wallet_label} pending processing.",
             "Funds will remain reserved until this transaction is completed or resolved.",
         ]
     if transaction.category == Transaction.Category.DEPOSIT:
@@ -115,7 +120,10 @@ def _wallet_impact_line(transaction: Transaction) -> str | None:
         return None
     if transaction.category not in WALLET_CATEGORIES:
         return None
-    amount = _format_money(transaction.amount, transaction.currency_code)
+    if transaction.crypto_symbol and transaction.crypto_amount:
+        amount = f"{transaction.crypto_amount:,.8f} {transaction.crypto_symbol}"
+    else:
+        amount = _format_money(transaction.amount, transaction.currency_code)
     if transaction.category == Transaction.Category.DEPOSIT:
         return f"Wallet impact: +{amount} credited to your account"
     if transaction.category == Transaction.Category.WITHDRAWAL:
@@ -126,7 +134,10 @@ def _wallet_impact_line(transaction: Transaction) -> str | None:
 def _refund_lines(refund_info: dict | None) -> list[str]:
     if not refund_info:
         return []
-    amount = _format_money(refund_info["amount"], refund_info["currency_code"])
+    if refund_info.get("is_crypto"):
+        amount = f"{refund_info['amount']:,.8f} {refund_info['currency_code']}"
+    else:
+        amount = _format_money(refund_info["amount"], refund_info["currency_code"])
     return [
         f"Refund applied: {amount} has been credited back to your wallet.",
         "Your available balance has been updated accordingly.",

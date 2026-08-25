@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from apps.core.utils import generate_reference_code
 from apps.core.viewsets import UserScopedViewSet
 
+from .crypto_method import ensure_crypto_transfer_method
 from .models import Transfer, TransferMethod
 from .serializers import (
     TransferCreateSerializer,
@@ -19,6 +20,10 @@ class TransferMethodViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = TransferMethod.objects.filter(is_active=True)
     lookup_field = "slug"
+
+    def get_queryset(self):
+        ensure_crypto_transfer_method()
+        return TransferMethod.objects.filter(is_active=True)
 
 
 class TransferViewSet(UserScopedViewSet):
@@ -60,4 +65,5 @@ class WithdrawalViewSet(UserScopedViewSet):
         return context
 
     def perform_create(self, serializer):
+        ensure_crypto_transfer_method()
         serializer.save()

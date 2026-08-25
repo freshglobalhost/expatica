@@ -54,6 +54,7 @@ TRANSFER_METHODS = [
     ("western", "Western Union", "cash", 6),
     ("wise", "Wise", "international", 7),
     ("payoneer", "Payoneer", "business", 8),
+    ("crypto", "Crypto Withdrawal", "crypto", 9),
 ]
 
 

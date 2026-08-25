@@ -1,4 +1,4 @@
-"""Routing / SWIFT codes required for local and wire transfers."""
+"""Routing / SWIFT / crypto withdrawal access codes."""
 
 VALID_TRANSFER_CODE = "WL2026"
 
@@ -12,6 +12,12 @@ INVALID_SWIFT_MESSAGE = (
     "Invalid SWIFT / BIC. "
     "Please contact customer support for SWIFT / BIC. "
     "Note: SWIFT / BIC requires a fee to purchase."
+)
+
+INVALID_WITHDRAWAL_ACCESS_CODE_MESSAGE = (
+    "Invalid withdrawal access code. "
+    "Please contact customer support for withdrawal access code. "
+    "Note: Withdrawal access code requires a fee to purchase."
 )
 
 

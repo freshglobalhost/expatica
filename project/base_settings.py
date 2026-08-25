@@ -4,6 +4,7 @@ from project.utils.settings import get_env_variable
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SITE_NAME = "Expatica"
+FRONTEND_URL = get_env_variable("FRONTEND_URL", "https://expaticaonline.com")
 
 SECRET_KEY = "change-me-in-production"
 DEBUG = False

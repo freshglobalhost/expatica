@@ -20,7 +20,7 @@ class TransferMethodViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TransferViewSet(UserScopedViewSet):
-    queryset = Transfer.objects.select_related("method")
+    queryset = Transfer.objects.select_related("method").filter(kind=Transfer.Kind.TRANSFER)
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -31,6 +31,26 @@ class TransferViewSet(UserScopedViewSet):
         context = super().get_serializer_context()
         if self.action == "create":
             context["reference_code"] = generate_reference_code("TR")
+            context["payout_kind"] = Transfer.Kind.TRANSFER
+        return context
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class WithdrawalViewSet(UserScopedViewSet):
+    queryset = Transfer.objects.select_related("method").filter(kind=Transfer.Kind.WITHDRAWAL)
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return TransferCreateSerializer
+        return TransferSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if self.action == "create":
+            context["reference_code"] = generate_reference_code("WD")
+            context["payout_kind"] = Transfer.Kind.WITHDRAWAL
         return context
 
     def perform_create(self, serializer):

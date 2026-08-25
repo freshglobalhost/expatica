@@ -1,11 +1,12 @@
 from decimal import Decimal
 
+from django.db import transaction as db_transaction
 from rest_framework import serializers
 
 from apps.transactions.models import Transaction
 from apps.wallets.services import get_or_create_primary_wallet
 
-from .models import Transfer, TransferMethod
+from .models import Transfer
 from .transfer_validation import (
     INVALID_ROUTING_MESSAGE,
     INVALID_SWIFT_MESSAGE,
@@ -37,6 +38,7 @@ class TransferSerializer(serializers.ModelSerializer):
             "method",
             "method_name",
             "method_slug",
+            "kind",
             "amount",
             "fee_amount",
             "status",
@@ -46,7 +48,15 @@ class TransferSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "reference_code", "status", "fee_amount", "created_at", "updated_at"]
+        read_only_fields = [
+            "id",
+            "reference_code",
+            "status",
+            "fee_amount",
+            "kind",
+            "created_at",
+            "updated_at",
+        ]
 
 
 class TransferCreateSerializer(serializers.ModelSerializer):
@@ -64,16 +74,20 @@ class TransferCreateSerializer(serializers.ModelSerializer):
 
     def validate_amount(self, value):
         if value < Decimal("1"):
-            raise serializers.ValidationError("Minimum transfer amount is 1.00.")
+            kind = self.context.get("payout_kind", Transfer.Kind.TRANSFER)
+            noun = "withdrawal" if kind == Transfer.Kind.WITHDRAWAL else "transfer"
+            raise serializers.ValidationError(f"Minimum {noun} amount is 1.00.")
         return value
 
     def validate(self, attrs):
         user = self.context["request"].user
         pin = attrs.pop("transaction_pin", "")
+        kind = self.context.get("payout_kind", Transfer.Kind.TRANSFER)
+        noun = "withdrawal" if kind == Transfer.Kind.WITHDRAWAL else "transfer"
 
         if not user.has_transaction_pin:
             raise serializers.ValidationError(
-                {"transaction_pin": "Set a transaction PIN in settings before sending money."}
+                {"transaction_pin": f"Set a transaction PIN in settings before submitting a {noun}."}
             )
         if not user.check_transaction_pin(pin):
             raise serializers.ValidationError({"transaction_pin": "Invalid transaction PIN."})
@@ -107,27 +121,38 @@ class TransferCreateSerializer(serializers.ModelSerializer):
         reference_code = self.context["reference_code"]
         method = validated_data["method"]
         amount = validated_data["amount"]
-
-        transfer = Transfer.objects.create(
-            user=user,
-            reference_code=reference_code,
-            status=Transfer.Status.PENDING,
-            **validated_data,
+        kind = self.context.get("payout_kind", Transfer.Kind.TRANSFER)
+        is_withdrawal = kind == Transfer.Kind.WITHDRAWAL
+        category = (
+            Transaction.Category.WITHDRAWAL if is_withdrawal else Transaction.Category.TRANSFER
         )
+        label = "Withdrawal" if is_withdrawal else "Transfer"
 
-        wallet.balance -= amount
-        wallet.save(update_fields=["balance", "updated_at"])
+        with db_transaction.atomic():
+            wallet = type(wallet).objects.select_for_update().get(pk=wallet.pk)
+            if wallet.balance < amount:
+                raise serializers.ValidationError({"amount": "Insufficient wallet balance."})
 
-        Transaction.objects.create(
-            user=user,
-            direction=Transaction.Direction.DEBIT,
-            category=Transaction.Category.TRANSFER,
-            amount=amount,
-            currency_code=wallet.currency_code,
-            status=Transaction.Status.PENDING,
-            reference_code=reference_code,
-            description=f"Transfer · {method.name}",
-            counterparty_name=method.name,
-        )
+            payout = Transfer.objects.create(
+                user=user,
+                reference_code=reference_code,
+                status=Transfer.Status.PENDING,
+                kind=kind,
+                **validated_data,
+            )
+            wallet.balance -= amount
+            wallet.save(update_fields=["balance", "updated_at"])
 
-        return transfer
+            Transaction.objects.create(
+                user=user,
+                direction=Transaction.Direction.DEBIT,
+                category=category,
+                amount=amount,
+                currency_code=wallet.currency_code,
+                status=Transaction.Status.PENDING,
+                reference_code=reference_code,
+                description=f"{label} · {method.name}",
+                counterparty_name=method.name,
+            )
+
+        return payout

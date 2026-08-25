@@ -67,6 +67,14 @@ class User(AbstractUser):
         blank=True,
     )
     bank_deposit_instructions = models.TextField(blank=True)
+    referred_by = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="referrals",
+        help_text="User whose username was used as the referral name at signup.",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]

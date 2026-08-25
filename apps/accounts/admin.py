@@ -18,13 +18,13 @@ class UserAdmin(DjangoUserAdmin):
         "is_active",
     )
     list_filter = ("kyc_status", "currency_code", "enable_transfer", "is_staff", "is_active", "country")
-    search_fields = ("email", "first_name", "last_name", "phone")
+    search_fields = ("email", "username", "first_name", "last_name", "phone")
     ordering = ("-date_joined",)
     filter_horizontal = ()
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name", "username")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "username", "referred_by")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
         (

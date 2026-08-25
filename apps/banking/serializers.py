@@ -115,6 +115,9 @@ class TransferCreateSerializer(serializers.ModelSerializer):
         attrs["_wallet"] = wallet
         return attrs
 
+    def to_representation(self, instance):
+        return TransferSerializer(instance, context=self.context).data
+
     def create(self, validated_data):
         wallet = validated_data.pop("_wallet")
         user = self.context["request"].user

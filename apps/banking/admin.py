@@ -11,6 +11,6 @@ class TransferMethodAdmin(admin.ModelAdmin):
 
 @admin.register(Transfer)
 class TransferAdmin(admin.ModelAdmin):
-    list_display = ("reference_code", "user", "kind", "method", "amount", "status", "created_at")
-    list_filter = ("kind", "status", "method")
+    list_display = ("reference_code", "user", "method", "amount", "status", "created_at")
+    list_filter = ("status", "method")
     search_fields = ("reference_code", "user__email", "user__username")

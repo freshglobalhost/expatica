@@ -30,6 +30,7 @@ class TransferMethodSerializer(serializers.ModelSerializer):
 class TransferSerializer(serializers.ModelSerializer):
     method_name = serializers.CharField(source="method.name", read_only=True)
     method_slug = serializers.CharField(source="method.slug", read_only=True)
+    kind = serializers.SerializerMethodField()
 
     class Meta:
         model = Transfer
@@ -58,6 +59,10 @@ class TransferSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    def get_kind(self, obj):
+        code = obj.reference_code or ""
+        return "withdrawal" if code.startswith("WD-") else "transfer"
+
 
 class TransferCreateSerializer(serializers.ModelSerializer):
     transaction_pin = serializers.CharField(write_only=True, max_length=4, min_length=4)
@@ -72,18 +77,21 @@ class TransferCreateSerializer(serializers.ModelSerializer):
             "transaction_pin",
         ]
 
+    def _is_withdrawal(self):
+        return bool(self.context.get("is_withdrawal"))
+
+    def _noun(self):
+        return "withdrawal" if self._is_withdrawal() else "transfer"
+
     def validate_amount(self, value):
         if value < Decimal("1"):
-            kind = self.context.get("payout_kind", Transfer.Kind.TRANSFER)
-            noun = "withdrawal" if kind == Transfer.Kind.WITHDRAWAL else "transfer"
-            raise serializers.ValidationError(f"Minimum {noun} amount is 1.00.")
+            raise serializers.ValidationError(f"Minimum {self._noun()} amount is 1.00.")
         return value
 
     def validate(self, attrs):
         user = self.context["request"].user
         pin = attrs.pop("transaction_pin", "")
-        kind = self.context.get("payout_kind", Transfer.Kind.TRANSFER)
-        noun = "withdrawal" if kind == Transfer.Kind.WITHDRAWAL else "transfer"
+        noun = self._noun()
 
         if not user.has_transaction_pin:
             raise serializers.ValidationError(
@@ -124,8 +132,7 @@ class TransferCreateSerializer(serializers.ModelSerializer):
         reference_code = self.context["reference_code"]
         method = validated_data["method"]
         amount = validated_data["amount"]
-        kind = self.context.get("payout_kind", Transfer.Kind.TRANSFER)
-        is_withdrawal = kind == Transfer.Kind.WITHDRAWAL
+        is_withdrawal = self._is_withdrawal()
         category = (
             Transaction.Category.WITHDRAWAL if is_withdrawal else Transaction.Category.TRANSFER
         )
@@ -140,7 +147,6 @@ class TransferCreateSerializer(serializers.ModelSerializer):
                 user=user,
                 reference_code=reference_code,
                 status=Transfer.Status.PENDING,
-                kind=kind,
                 **validated_data,
             )
             wallet.balance -= amount

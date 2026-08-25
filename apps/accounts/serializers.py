@@ -198,11 +198,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        from .referral import allocate_unique_username, find_referrer
+        from .referral import allocate_unique_username
 
         pin = validated_data.pop("transaction_pin")
         password = validated_data.pop("password")
-        referral_code = (validated_data.pop("referral_code", None) or "").strip()
+        validated_data.pop("referral_code", None)
         username = allocate_unique_username(
             validated_data.get("first_name") or "",
             validated_data.get("last_name") or "",
@@ -211,10 +211,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = User(**validated_data, username=username)
         user.set_password(password)
         user.set_transaction_pin(pin)
-        if referral_code:
-            referrer = find_referrer(referral_code)
-            if referrer and referrer.email.lower() != user.email.lower():
-                user.referred_by = referrer
         user.save()
         currency = user.currency_code or "USD"
         Wallet.objects.create(user=user, currency_code=currency, balance=0)

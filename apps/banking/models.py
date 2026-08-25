@@ -26,22 +26,12 @@ class Transfer(BaseModel):
         FAILED = "failed", "Failed"
         CANCELLED = "cancelled", "Cancelled"
 
-    class Kind(models.TextChoices):
-        TRANSFER = "transfer", "Transfer"
-        WITHDRAWAL = "withdrawal", "Withdrawal"
-
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="transfers",
     )
     method = models.ForeignKey(TransferMethod, on_delete=models.PROTECT, related_name="transfers")
-    kind = models.CharField(
-        max_length=20,
-        choices=Kind.choices,
-        default=Kind.TRANSFER,
-        db_index=True,
-    )
     amount = models.DecimalField(max_digits=14, decimal_places=2)
     fee_amount = models.DecimalField(max_digits=14, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)

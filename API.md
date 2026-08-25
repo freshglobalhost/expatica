@@ -15,7 +15,7 @@ Auth header: `Authorization: Bearer <access_token>`
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/accounts/register/` | Sign up (+ creates USD wallet). Optional `{ "referral_code" }` uses the referrer's username |
+| POST | `/accounts/register/` | Sign up (+ creates USD wallet). Optional `{ "referral_code" }` is accepted (username of the referrer) |
 | GET | `/accounts/me/` | Profile |
 | PATCH | `/accounts/me/` | Update profile (JSON or multipart for `profile_picture`) |
 | GET | `/accounts/me/dashboard/` | User + balances summary |

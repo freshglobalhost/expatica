@@ -6,7 +6,7 @@ from rest_framework import serializers
 from apps.transactions.models import Transaction
 from apps.wallets.services import get_or_create_primary_wallet
 
-from .models import Transfer
+from .models import Transfer, TransferMethod
 from .transfer_validation import (
     INVALID_ROUTING_MESSAGE,
     INVALID_SWIFT_MESSAGE,

@@ -24,6 +24,7 @@ from apps.wallets.serializers import WalletSerializer
 
 from .dashboard_utils import build_dashboard_notifications
 from .models import PasswordResetCode
+from .referral import referral_code_for, referral_link_for
 from .serializers import (
     ForgotPasswordSerializer,
     PasswordChangeSerializer,
@@ -291,3 +292,15 @@ class ResetPasswordView(APIView):
         reset.save(update_fields=["is_used"])
 
         return Response({"detail": "Password reset successfully. You can sign in now."})
+
+
+class ReferralLinkView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        return Response(
+            {
+                "referral_code": referral_code_for(request.user),
+                "referral_link": referral_link_for(request.user),
+            }
+        )

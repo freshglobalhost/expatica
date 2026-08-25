@@ -33,6 +33,8 @@ class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
     enable_transfer = serializers.BooleanField(read_only=True)
     assigned_bank_account = serializers.SerializerMethodField()
+    referral_code = serializers.SerializerMethodField()
+    referral_link = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -60,6 +62,8 @@ class UserSerializer(serializers.ModelSerializer):
             "is_profile_complete",
             "enable_transfer",
             "assigned_bank_account",
+            "referral_code",
+            "referral_link",
             "date_joined",
         ]
         read_only_fields = [
@@ -78,6 +82,8 @@ class UserSerializer(serializers.ModelSerializer):
             "is_profile_complete",
             "enable_transfer",
             "assigned_bank_account",
+            "referral_code",
+            "referral_link",
             "currency_code",
             "profile_picture_url",
         ]
@@ -99,6 +105,16 @@ class UserSerializer(serializers.ModelSerializer):
             "currency": obj.bank_currency or obj.currency_code or "USD",
             "instructions": obj.bank_deposit_instructions or "",
         }
+
+    def get_referral_code(self, obj):
+        from .referral import referral_code_for
+
+        return referral_code_for(obj)
+
+    def get_referral_link(self, obj):
+        from .referral import referral_link_for
+
+        return referral_link_for(obj)
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
@@ -154,6 +170,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     transaction_pin = serializers.CharField(write_only=True, min_length=4, max_length=4)
+    referral_code = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     class Meta:
         model = User
@@ -168,6 +185,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "address",
             "gender",
             "transaction_pin",
+            "referral_code",
         ]
 
     def validate_password(self, value):
@@ -180,9 +198,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        from .referral import allocate_unique_username
+
         pin = validated_data.pop("transaction_pin")
         password = validated_data.pop("password")
-        user = User(**validated_data)
+        validated_data.pop("referral_code", None)
+        username = allocate_unique_username(
+            validated_data.get("first_name") or "",
+            validated_data.get("last_name") or "",
+            validated_data.get("email") or "",
+        )
+        user = User(**validated_data, username=username)
         user.set_password(password)
         user.set_transaction_pin(pin)
         user.save()

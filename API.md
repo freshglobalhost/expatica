@@ -15,10 +15,11 @@ Auth header: `Authorization: Bearer <access_token>`
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/accounts/register/` | Sign up (+ creates USD wallet) |
+| POST | `/accounts/register/` | Sign up (+ creates USD wallet). Optional `{ "referral_code" }` is accepted (username of the referrer) |
 | GET | `/accounts/me/` | Profile |
 | PATCH | `/accounts/me/` | Update profile (JSON or multipart for `profile_picture`) |
 | GET | `/accounts/me/dashboard/` | User + balances summary |
+| GET | `/accounts/me/referral/` | `{ "referral_code", "referral_link" }` — username-based referral |
 | POST | `/accounts/me/password/` | `{ "current_password", "new_password" }` |
 | POST | `/accounts/me/transaction-pin/` | `{ "current_transaction_pin?", "new_transaction_pin" }` |
 | POST | `/accounts/verify-transaction-pin/` | `{ "transaction_pin" }` — after login |
@@ -42,6 +43,7 @@ Auth header: `Authorization: Bearer <access_token>`
 | GET | `/banking/methods/` | Catalog |
 | GET | `/banking/methods/{slug}/` |
 | GET/POST | `/banking/transfers/` |
+| GET/POST | `/banking/withdrawals/` | Local-bank withdrawals (same payload as transfers) |
 
 ## Loans
 

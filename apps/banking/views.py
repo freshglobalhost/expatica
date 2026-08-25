@@ -11,6 +11,8 @@ from .serializers import (
     TransferSerializer,
 )
 
+WITHDRAWAL_REF_PREFIX = "WD-"
+
 
 class TransferMethodViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TransferMethodSerializer
@@ -20,7 +22,9 @@ class TransferMethodViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TransferViewSet(UserScopedViewSet):
-    queryset = Transfer.objects.select_related("method")
+    queryset = Transfer.objects.select_related("method").exclude(
+        reference_code__startswith=WITHDRAWAL_REF_PREFIX
+    )
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -31,6 +35,28 @@ class TransferViewSet(UserScopedViewSet):
         context = super().get_serializer_context()
         if self.action == "create":
             context["reference_code"] = generate_reference_code("TR")
+            context["is_withdrawal"] = False
+        return context
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class WithdrawalViewSet(UserScopedViewSet):
+    queryset = Transfer.objects.select_related("method").filter(
+        reference_code__startswith=WITHDRAWAL_REF_PREFIX
+    )
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return TransferCreateSerializer
+        return TransferSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if self.action == "create":
+            context["reference_code"] = generate_reference_code("WD")
+            context["is_withdrawal"] = True
         return context
 
     def perform_create(self, serializer):

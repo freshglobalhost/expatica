@@ -13,4 +13,4 @@ class TransferMethodAdmin(admin.ModelAdmin):
 class TransferAdmin(admin.ModelAdmin):
     list_display = ("reference_code", "user", "method", "amount", "status", "created_at")
     list_filter = ("status", "method")
-    search_fields = ("reference_code", "user__email")
+    search_fields = ("reference_code", "user__email", "user__username")
